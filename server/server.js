@@ -34,7 +34,7 @@ const saltRounds = 10;
 
 //post method for endpoint "/register"
 app.post("/register", async(req, res) => { 
-    const {userName, email, password} = req.body;
+    const {userName, email, password, userType} = req.body;
     try{
         const entityCheck = db.query("SELECT * FROM users WHERE email = ($1)",
             [email]
@@ -50,8 +50,9 @@ app.post("/register", async(req, res) => {
                     res.json({error: "An error occured"});
                 }
                 else{
-                    await db.query("INSERT INTO users (username, email, password) VALUES ($1, $2, $3)", 
-                        [userName, email, hash]
+                    console.log(userType);
+                    await db.query("INSERT INTO users (username, email, password, usertype) VALUES ($1, $2, $3, $4)", 
+                        [userName, email, hash, userType]
                     );
                 }
             })    
@@ -67,7 +68,7 @@ app.post("/register", async(req, res) => {
 app.post("/login", async (req, res) => {
     const {email, password} = req.body;
     try{
-        const result = await db.query("SELECT username, password FROM users WHERE email = ($1)",
+        const result = await db.query("SELECT username, password, usertype FROM users WHERE email = ($1)",
             [email]
         );
         if(result.rows.length > 0){
@@ -79,7 +80,7 @@ app.post("/login", async (req, res) => {
                 else{
                     //generate jwt token and send back
                     if(reslt){
-                        res.json({userName: result.rows[0].username});
+                        res.json({userType: result.rows[0].usertype, userName: result.rows[0].username});   
                     }
                     else{
                         res.status(401).json({message: 'Invalid Email or Password'});
@@ -98,6 +99,20 @@ app.post("/login", async (req, res) => {
         res.status(500).json({message: 'Internal Server Error'});
     }
 });
+
+// get method for endpoint "/users"
+// sends the response as json response
+// gets all the usernames from the users table
+app.get("/users", async(req, res) => {
+    try{
+        const queryResult = await db.query("SELECT username FROM users ORDER BY username");
+        var result = queryResult.rows;
+    }
+    catch(error){
+        console.log(`Error: ${error}`)
+    }
+    res.json({users: result});
+})
 
 // get method for endpoint "/api" 
 // sends the response as json format

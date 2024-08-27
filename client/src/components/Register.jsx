@@ -13,6 +13,7 @@ function Register(){
     const [registerDetails, setRegisterDetails] = useState({
         userName: "",
         email: "",
+        userType: "",
         password: "",
         confirmPassword: ""
     });
@@ -34,6 +35,7 @@ function Register(){
             userName: registerDetails.userName,
             email: registerDetails.email,
             password: registerDetails.password,
+            userType: registerDetails.userType
         };
         if(registerDetails.password === registerDetails.confirmPassword){
             fetch("/register", {
@@ -45,15 +47,16 @@ function Register(){
             })
             .catch(error => {
                 alert(error);
-            })          
+            })                    
         }
         setRegisterDetails({
             userName: "",
             email: "",
+            userType: "",
             password: "",
             confirmPassword: "",
         })
-        navigate("/regSucess");
+        navigate("/regSucess");    
     }
 
     return(
@@ -80,6 +83,16 @@ function Register(){
                         />
                     </Form.Group>
                     <br />
+                    <Form.Select aria-label="Default select example"
+                        name = "userType"
+                        value={registerDetails.userType}
+                        onChange={handleChange}    
+                    >
+                        <option>Type of User</option>
+                        <option value="admin">Administrator</option>
+                        <option value="normal">Standard User</option>
+                    </Form.Select>
+                    <br />
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Control type="password" placeholder="Password" 
                             name = "password"
@@ -89,7 +102,7 @@ function Register(){
                     </Form.Group>
                     <br />
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Control type="password" placeholder="Password" 
+                        <Form.Control type="password" placeholder="Confirm Password" 
                             name = "confirmPassword"
                             value = {registerDetails.confirmPassword}
                             onChange={handleChange}

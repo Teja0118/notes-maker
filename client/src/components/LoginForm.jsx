@@ -48,11 +48,11 @@ function LoginForm({setUserName, setIsLoggedIn}){
             return response.json();
       })
       .then(data => {
-        if(data.userName){
+        if(data){
           setUserName(data.userName);
           setIsLoggedIn(true);
           localStorage.setItem("token-info", JSON.stringify(userData));
-          navigate("/home");
+          (data.userType === "admin") ? navigate("/adminDashboard") : navigate("/home");
         }
         else{
           alert("Invalid Email or Password");
@@ -63,7 +63,7 @@ function LoginForm({setUserName, setIsLoggedIn}){
         alert("An error occured during login");
       });
     }
-  
+
     function redirectSignup(){
       navigate("/register");
     }

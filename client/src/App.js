@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LoginForm from "./components/LoginForm";
 import Home from "./components/Home";
+import AdminDashboard from './components/AdminDashboard';
 import Register from "./components/Register";
 import RegSuccess from "./components/RegSuccess";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -25,6 +26,10 @@ import "./App.css";
             element = {
               <Home userName = {userName} isLoggedIn = {isLoggedIn} setIsLoggedIn = {setIsLoggedIn} />           
             } 
+          />
+          <Route 
+            path = "/adminDashboard"
+            element = {<AdminDashboard userName = {userName} isLoggedIn = {isLoggedIn} setIsLoggedIn = {setIsLoggedIn}/>}
           />
           <Route
             path = "/register" 
